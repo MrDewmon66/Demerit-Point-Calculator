@@ -8,7 +8,7 @@ from get_demerit_points import get_demerit_points
 SUCCESS_MSG = 'success'
 WARNING_MSG = 'warning'
 KEY_SIZE = 24
-HTML_TEMPLATE = 'compare_numbers_with_tickbox_1.html'
+HTML_TEMPLATE = 'demerit_points_calculator.html'
 
 # Create Flask instance and set the session key
 app = Flask(__name__)
@@ -52,7 +52,7 @@ def home():
             # No numbers entered
             flash('Please enter a driving speed and speed limit.', WARNING_MSG)
 
-    return render_template(HTML_TEMPLATE, title='CompareNumbers')
+    return render_template(HTML_TEMPLATE, title='Demerit Points Calculator')
 
 if __name__ == '__main__':
     app.run()
