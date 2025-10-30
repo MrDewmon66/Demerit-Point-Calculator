@@ -31,14 +31,26 @@ def home():
         if driving_speed != '' and speed_limit != '':
             # Data has been submitted
             if driving_speed.replace('.','').isdigit() and speed_limit.isdigit():
-                # Numerical fields are digits so let's convert them to ints
-                # Although we really should check to see if we should convert first_num to a float or an int 
+                
                 driving_speed = float(driving_speed)
                 speed_limit = int(speed_limit)
-                # Compare the values received and return the results to the browser
-                msg = get_demerit_points(driving_speed, speed_limit, holiday_period)
-                flash(msg, SUCCESS_MSG)
-                return render_template(HTML_TEMPLATE, title='CompareNumbers', form_driving_speed=driving_speed, form_speed_limit=speed_limit, form_holiday_period=holiday_period)
+                
+                mandatory, points = get_demerit_points(driving_speed, speed_limit, holiday_period)
+                display_driving_speed = int(driving_speed) if driving_speed.is_integer() else driving_speed
+
+                # Checks to see if points aren't 0
+                if points != 0:
+                    # If there are points then displays the desired message for the points
+                    penalty_type = "mandotory" if mandatory else "discretional"
+                    msg = (f"The {penalty_type} penalty for driving at {display_driving_speed} km/h in a {speed_limit}km/h zone is {points} points")
+                    flash(msg, WARNING_MSG)
+                else:
+                    # Displays the coorect message if the driver isn't speeding
+                    msg = (f"{display_driving_speed} km/h in a {speed_limit} km/h zone is not speeding.")
+                    flash(msg, SUCCESS_MSG)
+
+                return render_template(HTML_TEMPLATE, title='Demerit Points Calculator', form_driving_speed=display_driving_speed, form_speed_limit=speed_limit, form_holiday_period=holiday_period)
+            
             else:
                 # Not digits
                 flash(f'Numbers only please.', WARNING_MSG)
